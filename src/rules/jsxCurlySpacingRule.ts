@@ -105,14 +105,23 @@ class JsxCurlySpacingWalker extends Lint.RuleWalker {
     protected visitJsxExpression(node: ts.JsxExpression) {
         this.validateBraceSpacing(node);
 
+        console.log("Visiting jsxExpression: " + node.getText());
         super.visitJsxExpression(node);
+    }
+
+    private printInformation(node: ts.Node) {
+        console.log("Visiting node: " + node.getText());
+        console.log("Node has trivia: " + node.getLeadingTriviaWidth());
+        console.log("Node start is: " + node.getStart());
+        console.log("Node fullStart is: " + node.getFullStart());
+        console.log("Node width is: " + node.getWidth());
+        console.log("Node full width is: " + node.getFullWidth());
     }
 
     protected visitNode(node: ts.Node) {
         if (node.kind === ts.SyntaxKind.JsxSpreadAttribute) {
             this.validateBraceSpacing(node);
         }
-
         super.visitNode(node);
     }
 
@@ -123,6 +132,7 @@ class JsxCurlySpacingWalker extends Lint.RuleWalker {
         const secondToLastToken = node.getChildAt(node.getChildCount() - 2);
         const nodeStart = node.getStart();
         const nodeWidth = node.getWidth();
+        this.printInformation(node);
 
         if (this.hasOption(OPTION_ALWAYS)) {
             if (!isSpaceBetweenTokens(firstToken, secondToken)) {
